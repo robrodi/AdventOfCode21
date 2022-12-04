@@ -1,7 +1,7 @@
 use std::path;
 
 use pathfinding::directed::dijkstra;
-
+type Map = Vec<Vec<u8>>;
 const NEXT: [(i32, i32); 4] = [(1, 0), (-1, 0), (0, 1), (0, -1)];
 
 pub fn part_one(input: &str) -> Option<u32> {
@@ -29,8 +29,16 @@ pub fn part_one(input: &str) -> Option<u32> {
 pub fn part_two(input: &str) -> Option<u32> {
     None
 }
+fn ugh_5x_horiz(map: Map) -> Map{
+    for row in map{
+        let mut new_row = Vec<u8>::
+    }
+    // for each row
+    //  for i= 1..4
+    //  concat row
+}
 
-fn parse(input: &str) -> Vec<Vec<u8>>{
+fn parse(input: &str) -> Map{
     input.lines()
         .map(|s| {
                 s.chars()
@@ -58,6 +66,6 @@ mod tests {
     #[test]
     fn test_part_two() {
         let input = advent_of_code::read_file("examples", 15);
-        assert_eq!(part_two(&input), None);
+        assert_eq!(part_two(&input), Some(315));
     }
 }
