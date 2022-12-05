@@ -27,8 +27,8 @@ pub fn part_one(input: &str) -> Option<u32> {
 pub fn part_two(input: &str) -> Option<u32> {
     let input: Map = parse(input);
     let mut map: Map = Vec::new();
-    for i in 0..5{
-        for row in ugh_5x_horiz(input.to_vec(), i){
+    for i in 0..5 {
+        for row in ugh_5x_horiz(input.to_vec(), i) {
             map.push(row);
         }
     }
@@ -54,15 +54,16 @@ pub fn part_two(input: &str) -> Option<u32> {
     .1;
     Some(path_density)
 }
-fn ugh_5x_horiz(map: Map, y_incrementor: u8) -> Map{
+fn ugh_5x_horiz(map: Map, y_incrementor: u8) -> Map {
     let mut result: Map = Vec::new();
-    for row in map{
-
+    for row in map {
         let mut new_row: Vec<u8> = Vec::new();
         for i in 0..5 {
             for j in &row {
                 let mut value = j + i + y_incrementor;
-                if value > 9 { value = (value % 10) + 1; }
+                if value > 9 {
+                    value = (value % 10) + 1;
+                }
                 new_row.push(value);
             }
         }
@@ -71,13 +72,10 @@ fn ugh_5x_horiz(map: Map, y_incrementor: u8) -> Map{
     result
 }
 
-fn parse(input: &str) -> Map{
-    input.lines()
-        .map(|s| {
-                s.chars()
-                .map(|c| c.to_digit(10).unwrap() as u8)
-                .collect()
-        })
+fn parse(input: &str) -> Map {
+    input
+        .lines()
+        .map(|s| s.chars().map(|c| c.to_digit(10).unwrap() as u8).collect())
         .collect()
 }
 fn main() {
@@ -97,11 +95,15 @@ mod tests {
     }
 
     #[test]
-    fn test_5xh(){
+    fn test_5xh() {
         let expected = "11637517422274862853338597396444961841755517295286";
         let input = parse(&advent_of_code::read_file("examples", 15));
         let actual: Vec<u8> = ugh_5x_horiz(input, 0).first().unwrap().to_vec();
-        let ss = actual.iter().map(|u| u.to_string()).collect::<Vec<String>>().join("");
+        let ss = actual
+            .iter()
+            .map(|u| u.to_string())
+            .collect::<Vec<String>>()
+            .join("");
         assert_eq!(ss, expected);
     }
     #[test]
