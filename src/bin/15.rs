@@ -25,19 +25,44 @@ pub fn part_one(input: &str) -> Option<u32> {
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
-    let map = parse(input);
-    let map_5h = ugh_5x_horiz(map);
-    None
+    let input: Map = parse(input);
+    let mut map: Map = Vec::new();
+    for i in 0..5{
+        for row in ugh_5x_horiz(input.to_vec(), i){
+            map.push(row);
+        }
+    }
+    println!("{} wide, {} tall!", map[0].len(), map.len());
+    // add i to each element, 5h again.
+
+    let goal = (map[0].len() as i32 - 1, map.len() as i32 - 1);
+    let path_density = dijkstra::dijkstra(
+        &(0, 0),
+        |(x, y)| {
+            NEXT.iter()
+                .map(|(xx, yy)| {
+                    map.get((y + yy) as usize)
+                        .and_then(|r| r.get((x + xx) as usize))
+                        .map(|c| ((x + xx, y + yy), *c as u32))
+                })
+                .flatten()
+                .collect::<Vec<_>>()
+        },
+        |&p| p == goal,
+    )
+    .unwrap()
+    .1;
+    Some(path_density)
 }
-fn ugh_5x_horiz(map: Map) -> Map{
+fn ugh_5x_horiz(map: Map, y_incrementor: u8) -> Map{
     let mut result: Map = Vec::new();
     for row in map{
 
         let mut new_row: Vec<u8> = Vec::new();
         for i in 0..5 {
             for j in &row {
-                let mut value = j + i;
-                if (value > 9) { value = (value % 10) + 1; }
+                let mut value = j + i + y_incrementor;
+                if value > 9 { value = (value % 10) + 1; }
                 new_row.push(value);
             }
         }
@@ -75,7 +100,7 @@ mod tests {
     fn test_5xh(){
         let expected = "11637517422274862853338597396444961841755517295286";
         let input = parse(&advent_of_code::read_file("examples", 15));
-        let actual: Vec<u8> = ugh_5x_horiz(input).first().unwrap().to_vec();
+        let actual: Vec<u8> = ugh_5x_horiz(input, 0).first().unwrap().to_vec();
         let ss = actual.iter().map(|u| u.to_string()).collect::<Vec<String>>().join("");
         assert_eq!(ss, expected);
     }
